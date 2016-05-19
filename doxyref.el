@@ -5,7 +5,7 @@
 
 
 ;; TODO: 
-;;       get 100 MATCHING functions (or increase the cap to 1000)
+;;      go back to string suffix ? 
 ;;      
 
 ;; FIXES:
@@ -486,11 +486,11 @@
   
   "given file name and output file puts the reference information in that file"
   (progn
-    ;; (with-temp-buffer
-    ;;   (insert "parse-SINGLE-files\n")
-    ;;   (insert fileName)
-    ;;   (append-to-buffer "output" nil nil)
-    ;;   )
+    (with-temp-buffer
+;;      (insert "parse-SINGLE-files\n")
+      (insert fileName)
+      (append-to-buffer "output" nil nil)
+      )
 
   (let*
       (
@@ -556,10 +556,10 @@
                    (desc (nth 1 pair))
                    )
               (progn
-                ;; (with-temp-buffer
-                ;;   (insert (format "after the entire parse %s\n"
-                ;;                   desc))
-                ;;   (append-to-buffer "output" nil nil))
+                (with-temp-buffer
+;;                  (insert (format "after the entire parse %s\n"
+;;                                  desc))
+                  (append-to-buffer "output" nil nil))
                 (parse-strings (nthcdr (- count 1) los)
                                (cons (list function desc) listPair)))
 
@@ -575,50 +575,48 @@
 (defun parse-block-comment (los listDesc lineCount)
   "parse block doxy comment and get the next function it refers to"
   (progn
-    ;; (with-temp-buffer
-    ;;   (insert "parse block comment\n")
-    ;;   (insert (format"desciption: %s\n" listDesc))
-    ;;   (insert (format"current: %s\n" (if los (append   listDesc (list (car los))) "nil")))
+    (with-temp-buffer
+;;      (insert "parse block comment\n")
+;;      (insert (format"desciption: %s\n" listDesc))
+;;      (insert (format"current: %s\n" (if los (append   listDesc (list (car los))) "nil")))
 
-    ;;   (append-to-buffer "output" nil nil)
-    ;;   )
-    (if los
-        (let* (
-               (curLine (car los))
-               )
-          (if (not (string-match-any  curLine
-                                      blockCommentEnd
-                                      )
-                   )
-              (progn
-                ;; (with-temp-buffer
-                ;;   (insert (format "NOT THE END current line: %s current description: %s\n\n\n" curLine listDesc ))
-                ;;   (append-to-buffer "output" nil nil))
-                (parse-block-comment (cdr los)
-                                     (append  listDesc (list curLine))
-                                     (+ 1 lineCount)))
-            ;; else, return the next nonEmpty line as a list with the description
-            (let*(
-                  (non-empt-ret (next-non-empty (cdr los) 0))
-                  (empty-count (nth 1 non-empt-ret))
-                  (non-empty-str (nth 0 non-empt-ret))
-                  )
-              (progn
-                (with-temp-buffer
-                  ;;    (insert (format "THE END \n non empt %s count %d \n\n\n\n" non-empty-str empty-count ))
-                  ;;    (append-to-buffer "output" nil nil))
-                  (list non-empty-str (append listDesc (list curLine)) (+ 2 empty-count lineCount)))
-
-                )
-              
-              
-              )
-            )
-          (list "" listDesc lineCount)
-          )
+      (append-to-buffer "output" nil nil)
       )
+  (if los
+      (let* (
+             (curLine (car los))
+             )
+        (if (not (string-match-any  curLine
+                                    blockCommentEnd
+                                    )
+                 )
+            (progn
+              (with-temp-buffer
+;;                (insert (format "NOT THE END current line: %s current description: %s\n\n\n" curLine listDesc ))
+                (append-to-buffer "output" nil nil))
+              (parse-block-comment (cdr los)
+                           (append  listDesc (list curLine))
+                           (+ 1 lineCount)))
+          ;; else, return the next nonEmpty line as a list with the description
+          (let*(
+                (non-empt-ret (next-non-empty (cdr los) 0))
+                (empty-count (nth 1 non-empt-ret))
+                (non-empty-str (nth 0 non-empt-ret))
+                )
+            (progn
+              (with-temp-buffer
+;;                (insert (format "THE END \n non empt %s count %d \n\n\n\n" non-empty-str empty-count ))
+                (append-to-buffer "output" nil nil))
+              (list non-empty-str (append listDesc (list curLine)) (+ 2 empty-count lineCount)))
+
+            )
+          
+          
+          )
+        )
+    (list "" listDesc lineCount)
     )
-  )
+  ))
 
 ;; keep adding to list of Desc, when last line is not ///, go until non empty line
 ;; return cons (function description lineCount) 
@@ -717,10 +715,10 @@
 (defun parse-dirs (lof outputDirectory dir projName)
   (progn
     (with-temp-buffer
-      (insert "parse-directory-files\n")
-      (if lof
-          (insert (car lof)))
-      (append-to-buffer "output" nil nil)
+;;      (insert "parse-directory-files\n")
+;;      (if lof
+;;          (insert (car lof)))
+;;      (append-to-buffer "output" nil nil)
       )
 
   (if lof
@@ -755,10 +753,10 @@
 (defun parse-list-file (lof outputDirectory dir projName)
   (progn
     (with-temp-buffer
-      (insert "parse-list-files\n")
-      (if lof
-          (insert (car lof)))
-      (append-to-buffer "output" nil nil)
+;;      (insert "parse-list-files\n")
+;;      (if lof
+;;          (insert (car lof)))
+;;      (append-to-buffer "output" nil nil)
       )
 
     
@@ -770,11 +768,10 @@
         (if (and
              (not
               (nth 0 (file-attributes curFile)))
-             (or (str-suffix= ".cpp" curFile )
-                 (str-suffix= ".c" curFile )
-                 (str-suffix= ".hpp" curFile )
-                 (str-suffix= ".h" curFile )
-                 (str-suffix= ".java" curFile )
+             (or (string-match ".cpp" curFile )
+                 (string-match ".c" curFile )
+                 (string-match ".hpp" curFile )
+                 (string-match ".h" curFile )
                  )
              )
             
