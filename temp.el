@@ -4,15 +4,18 @@
 ;; VERSION: 1.1 : multiple files
 
 
+;; TODO: 
+;;      go back to string suffix ?
+;;      save location for comapact mode
 
-;; BETA CHANGES :
-;;      Only highlight non compact
-;;      scroll centered at top non compact
-;;      always start compact
-;; BUGS:
-;;      Cant go compact when at the last function (call prev fist? )
+;; FIXES:
+;;      no more macros
+;;      highlight by default (doesnt quite work)
+;;      wont miss functions
+;;            before would skip the next line after each comment
+;;      looks at only c cpp h hpp java files
 
-;; TODO
+
 
 
 ;; (setq referenceDir "~/.emacs.d/reference")
@@ -43,7 +46,7 @@
 
 ;; last query (starts nil)
 ;; store last query for re printing
-(setq compact t) ;; print expanded by default
+(setq compact nil) ;; print expanded by default
 (setq last-function "**")
 (setq last-class "**")
 (setq last-project "**")
@@ -92,7 +95,6 @@
 
 ;; takes string file name
 (defun doxyRef-lookup-docs ()
-  (setq compact t)
   (let* (
          (proj-string (read-string (format "Project (** for all  , default %s):   " last-project)))
          (class-string (read-string (format"Class (** for all  , default %s):   " last-class)))
@@ -371,53 +373,45 @@
       )
     (insert-char 45 (- (window-body-width) 1) )
     (beginning-of-buffer)
+    (font-lock-mode 1)
     (doxyRef-mode 1)
-    (if (not compact)
-        (highlight-function)
-      nil)
+    (highlight-function)
     )
   )
 
 
 (defun re-print()
-  (kill-buffer "doxyBuffer")
-  (switch-to-buffer "doxyBuffer")
-  (doxyRef-mode 1)
+  (erase-buffer)
   (if compact
       (pretty-print-compact last-query)
     (pretty-print last-query)
     )
   (insert-char 45 (- (window-body-width)1) )
   (beginning-of-buffer)
-    (if (not compact)
-        (highlight-function)
-      nil)
+  (highlight-function)
   )
 
   
 
+(defun next-function ()
+  ;;(concat (concat "\C-s return " (make-string (window-body-width) ?-) "\C-s\C-a") )
+  [?\C-n ?\C-s return ?- ?- ?- ?- return ?\C-a]
+      )
 
    
 (defun next-function ()
   (next-line)
   (search-forward "----")
   (move-beginning-of-line nil)
-  (if (not compact)
-      (recenter (nth 1 recenter-positions))
-    nil)
-  
-  
   )
-
+(defun prev-function ()
+  ;;(concat (concat "\C-r return " (make-string (window-body-width)  ?-) "\C-a") )
+   [?\C-p ?\C-r return ?- ?- ?- ?- return ?\C-a]
+   )
 (defun prev-function ()
   (previous-line)
   (search-backward "----")
   (move-beginning-of-line nil)
-  (if (not compact)
-      (recenter (nth 1 recenter-positions))
-    nil)
-  
-  
   )
 ;; (defun quit-function ()
 ;;    "\C-x1\C-xk\C-m")
@@ -465,9 +459,7 @@
   (search-backward "----")
   (move-beginning-of-line 1)
   (recenter (nth 1 recenter-positions))
-    (if (not compact)
-        (highlight-function)
-      nil)
+  (highlight-function)
   )
 
 
