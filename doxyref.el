@@ -19,7 +19,11 @@
 ;; (load "~/.emacs.d/doxyref/doxyref.el")
 ;; (global-set-key (kbd "C-c d d") (lambda ()(interactive)(doxyRef-lookup-docs)))
 ;; (global-set-key (kbd "C-c d s") (lambda ()(interactive)(doxyRef-setup-project)))
-
+;; ;; optional:
+;; (setq function-color "hi-red-b")
+;; (setq function-color "hi-green-b")
+;; (setq function-color "hi-blue-b")
+;; (setq function-color "warning")
 
 
 
@@ -32,6 +36,7 @@
 (setq max-files 500)
 (setq funcSymbol "_func_") ;; any unique symbol works
 (setq configuration (current-window-configuration))
+(setq function-color "hi-red-b")
 ;; location
 (if (not (file-exists-p referenceDir)) ;; setup directory if it is not setup 
     (make-directory referenceDir))
@@ -446,7 +451,7 @@
 (defun highlight-function ()
   "highlight all FUNCTION: "
 
-  (hi-lock-line-face-buffer "Function:" "warning" )
+  (hi-lock-line-face-buffer "Function:" function-color )
   
   )
 
