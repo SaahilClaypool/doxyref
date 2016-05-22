@@ -9,11 +9,12 @@
 ;;      Only highlight non compact
 ;;      scroll centered at top non compact
 ;;      always start compact
+;;      return now inserts
 ;; BUGS:
 ;;      Cant go compact when at the last function (call prev fist? )
 
 ;; TODO
-
+;; single line comments better? 
 
 ;; (setq referenceDir "~/.emacs.d/reference")
 ;; (load "~/.emacs.d/doxyref/doxyref.el")
@@ -490,6 +491,7 @@
             (define-key map (kbd "n") (lambda () (interactive) (next-function)))
             (define-key map (kbd "p") (lambda () (interactive) (prev-function)))
             (define-key map (kbd "i") (lambda () (interactive)(paste-function)))
+            (define-key map (kbd "<return>") (lambda () (interactive)(paste-function)))
             (define-key map (kbd "q") (lambda () (interactive) (quit-function)))
            ;; (define-key map (kbd "h") (lambda () (interactive) (highlight-function)))
             (define-key map (kbd "c") (lambda () (interactive)(compact-function-toggle)))
@@ -498,10 +500,7 @@
   )
    
 
-;;(filter-strings "flag 1" lines)
-;;(filter-strings "test" (list "this is a test" "this is another test"))
-;;(filter-class "test" (list "this is a test" "this is another test"))
-;;(pretty-print lines)
+
 
 ;; PARSING SECTION
 
