@@ -527,7 +527,7 @@
 
     (with-temp-buffer
       (output-functions fileName functions projName)
-      (write-region nil nil outputFile t)
+      (write-region nil nil outputFile nil);; CHANGE: needed to clear old file, TODO WARNING CHECK
       
       )
     ;;    functions
